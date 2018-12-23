@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
+import {PageEvent} from '@angular/material';
 import {MovieTitleDataService} from './movie-title-data.service';
 import {MovieTitle} from './movie-title';
+import {Page} from './page';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +12,19 @@ import {MovieTitle} from './movie-title';
 })
 export class AppComponent implements OnInit {
   title = 'movie-angular-app';
-  movieTitles: MovieTitle[];
+  pageableMovieTitles: Page<MovieTitle>;
+  displayedColumns: string[] = ['tconst', 'movieTitleType', 'primaryTitle', 'isAdult', 'startYear', 'endYear', 'runtimeMinutes'];
+  pageEvent: PageEvent;
 
   constructor(private movieTitleDataService: MovieTitleDataService) {
   }
 
   ngOnInit() {
-    this.movieTitleDataService.getMovieTitles().subscribe(movieTitles => this.movieTitles = movieTitles);
+    this.movieTitleDataService.getMovieTitles().subscribe(movieTitles => this.pageableMovieTitles = movieTitles);
+  }
+
+  loadData($event) {
+    this.movieTitleDataService.getMovieTitles($event.pageIndex, $event.pageSize)
+      .subscribe(movieTitles => this.pageableMovieTitles = movieTitles);
   }
 }

@@ -3,7 +3,7 @@ import {environment} from 'src/environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {MovieTitle} from './movie-title';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Page} from './page';
 
 const API_URL = environment.apiUrl;
 
@@ -17,9 +17,12 @@ export class MovieTitleDataService {
   ) {
   }
 
-  public getMovieTitles(): Observable<MovieTitle[]> {
-    return this.http.get<MovieTitle[]>(API_URL + '/movies').pipe(
-      map(value => value['content'].map(item => new MovieTitle(item)))
-    );
+  public getMovieTitles(pageIndex: string = '0', pageSize: string = '20'): Observable<Page<MovieTitle>> {
+    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, {
+      params: {
+        page: pageIndex,
+        size: pageSize
+      }
+    });
   }
 }
