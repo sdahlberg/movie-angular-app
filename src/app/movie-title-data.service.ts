@@ -8,31 +8,18 @@ import {Pageable} from './pageable';
 
 const API_URL = environment.apiUrl;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MovieTitleDataService {
 
-  constructor(
-    private http: HttpClient
-  ) {
-  }
+  constructor(private http: HttpClient) {}
 
-  public getMovieTitles2(pageable: Pageable): Observable<Page<MovieTitle>> {
-    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, {
+  public getMovieTitles(pageable?: Pageable): Observable<Page<MovieTitle>> {
+    const options = pageable !== undefined ? {
       params: {
-        page: pageable.pageNumber,
-        size: pageable.pageSize
+        page: String(pageable.pageNumber),
+        size: String(pageable.pageSize)
       }
-    });
-  }
-
-  public getMovieTitles(pageIndex: string = '0', pageSize: string = '20'): Observable<Page<MovieTitle>> {
-    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, {
-      params: {
-        page: pageIndex,
-        size: pageSize
-      }
-    });
+    } : undefined;
+    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, options);
   }
 }

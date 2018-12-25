@@ -1,7 +1,7 @@
 export interface Pageable {
   offset: number;
-  pageNumber: string;
-  pageSize: string;
+  pageNumber: number;
+  pageSize: number;
   paged: boolean;
   unpaged: boolean;
 }

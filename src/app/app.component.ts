@@ -3,7 +3,7 @@ import {MovieTitleDataService} from './movie-title-data.service';
 import {MovieTitle} from './movie-title';
 import {Page} from './page';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Pagination} from './pagination';
+import {Pageable} from './pageable';
 
 @Component({
   selector: 'app-root',
@@ -22,14 +22,18 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.movieTitleDataService.getMovieTitles().subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
     this.route.queryParams
-      .subscribe(data => {
-        this.movieTitleDataService.getMovieTitles(data.pageIndex, data.pageSize)
-          .subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
+      .subscribe(queryParams => {
+        const pageable: Pageable = {
+          ...this.pageOfMovieTitles.pageable,
+          pageSize: queryParams.pageSize,
+          pageNumber: queryParams.pageIndex
+        };
+        this.movieTitleDataService.getMovieTitles(pageable).subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
       });
   }
 
   paginate($event) {
-    const pagination = (({pageIndex, pageSize}: Pagination) => ({pageIndex, pageSize}))($event);
-    this.router.navigate(['movie-title-overview'], {queryParams: pagination});
+    const {pageIndex, pageSize} = $event;
+    this.router.navigate(['movie-title-overview'], {queryParams: {pageIndex, pageSize}});
   }
 }
