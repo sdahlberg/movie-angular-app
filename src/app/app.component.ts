@@ -4,6 +4,7 @@ import {MovieTitle} from './movie-title';
 import {Page} from './page';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pageable} from './pageable';
+import {Sort} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -23,17 +24,33 @@ export class AppComponent implements OnInit {
     this.movieTitleDataService.getMovieTitles().subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
     this.route.queryParams
       .subscribe(queryParams => {
-        const pageable: Pageable = {
-          ...this.pageOfMovieTitles.pageable,
-          pageSize: queryParams.pageSize,
-          pageNumber: queryParams.pageIndex
-        };
-        this.movieTitleDataService.getMovieTitles(pageable).subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
+        if (queryParams.pageSize && queryParams.pageIndex || queryParams.active && queryParams.direction) {
+          const pageable: Pageable = {...this.pageOfMovieTitles.pageable};
+          if (queryParams.pageSize && queryParams.pageIndex) {
+            pageable.pageSize = queryParams.pageSize;
+            pageable.pageNumber = queryParams.pageIndex;
+          }
+          if (queryParams.active && queryParams.direction) {
+            pageable.sort = {
+              orders: [{
+                direction: queryParams.direction,
+                property: queryParams.active
+              }]
+            };
+          }
+          this.movieTitleDataService.getMovieTitles(pageable).subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
+        }
       });
   }
 
   paginate($event) {
     const {pageIndex, pageSize} = $event;
     this.router.navigate(['movie-title-overview'], {queryParams: {pageIndex, pageSize}});
+  }
+
+  sort(sort: Sort) {
+    console.log(sort);
+    const {active, direction} = sort;
+    this.router.navigate(['movie-title-overview'], {queryParams: {active, direction}});
   }
 }

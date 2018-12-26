@@ -1,25 +1,34 @@
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {MovieTitle} from './movie-title';
 import {Observable} from 'rxjs';
 import {Page} from './page';
 import {Pageable} from './pageable';
+import {Order} from './order';
 
 const API_URL = environment.apiUrl;
 
 @Injectable()
 export class MovieTitleDataService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   public getMovieTitles(pageable?: Pageable): Observable<Page<MovieTitle>> {
-    const options = pageable !== undefined ? {
-      params: {
-        page: String(pageable.pageNumber),
-        size: String(pageable.pageSize)
+    let httpParams = new HttpParams();
+    if (pageable !== undefined) {
+      if (pageable.pageNumber && pageable.pageSize) {
+        httpParams = httpParams
+          .set('page', String(pageable.pageNumber))
+          .set('size', String(pageable.pageSize));
       }
-    } : undefined;
-    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, options);
+      if (pageable.sort && pageable.sort.orders) {
+        for (const order: Order of pageable.sort.orders) {
+          httpParams = httpParams.append('sort', order.property + ',' + order.direction);
+        }
+      }
+    }
+    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, {params: httpParams});
   }
 }

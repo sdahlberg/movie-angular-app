@@ -7,40 +7,40 @@
       <mat-spinner></mat-spinner>
     </div>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="pageOfMovieTitles.content">
+      <table mat-table matSort [dataSource]="pageOfMovieTitles.content" (matSortChange)="sort($event)">
 
         <ng-container matColumnDef="tconst">
-          <th mat-header-cell *matHeaderCellDef>tconst</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="tconst">tconst</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.tconst}}</td>
         </ng-container>
 
         <ng-container matColumnDef="movieTitleType">
-          <th mat-header-cell *matHeaderCellDef>title type</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="movieTitleType">title type</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.movieTitleType}}</td>
         </ng-container>
 
         <ng-container matColumnDef="primaryTitle">
-          <th mat-header-cell *matHeaderCellDef>primary title</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="primaryTitle">primary title</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.primaryTitle}}</td>
         </ng-container>
 
         <ng-container matColumnDef="isAdult">
-          <th mat-header-cell *matHeaderCellDef>is adult</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="isAdult">is adult</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.adult}}</td>
         </ng-container>
 
         <ng-container matColumnDef="startYear">
-          <th mat-header-cell *matHeaderCellDef>start year</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="startYear">start year</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.startYear}}</td>
         </ng-container>
 
         <ng-container matColumnDef="endYear">
-          <th mat-header-cell *matHeaderCellDef>end year</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="endYear">end year</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.endYear}}</td>
         </ng-container>
 
         <ng-container matColumnDef="runtimeMinutes">
-          <th mat-header-cell *matHeaderCellDef>runtime minutes</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="runtimeMinutes">runtime minutes</th>
           <td mat-cell *matCellDef="let movieTitle">{{movieTitle.runtimeMinutes}}</td>
         </ng-container>
 

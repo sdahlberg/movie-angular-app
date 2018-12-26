@@ -8,6 +8,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatSortModule} from '@angular/material';
 
 const appRoutes: Routes = [
   {path: 'movie-title-overview', component: AppComponent}
@@ -24,6 +25,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
     MatProgressSpinnerModule
   ],
   providers: [
