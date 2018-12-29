@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
     this.movieTitleDataService.getMovieTitleTypes().subscribe(movieTitleTypes => this.movieTitleTypes = movieTitleTypes);
     this.route.queryParams
       .subscribe(queryParams => {
-        if (!this.initialized && queryParams.length === 0) {
-          // guard https://stackoverflow.com/questions/39861547/angular2-query-params-subscription-fires-twice
+        // guard https://stackoverflow.com/questions/39861547/angular2-query-params-subscription-fires-twice
+        if (!this.initialized && Object.keys(queryParams).length === 0 && window.location.href.split('?')[1]) {
           return;
         }
         this.initialized = true;
