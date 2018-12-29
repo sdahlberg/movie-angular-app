@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Pageable} from './pageable';
 import {Sort} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {MovieTitleFilterCriteria} from './movieTitleFilterCriteria';
+import {MovieTitleFilterCriteria} from './movie-title-filter-criteria';
 
 @Component({
   selector: 'app-root',

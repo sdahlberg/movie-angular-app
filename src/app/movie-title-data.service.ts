@@ -5,7 +5,7 @@ import {MovieTitle} from './movie-title';
 import {Observable} from 'rxjs';
 import {Page} from './page';
 import {Pageable} from './pageable';
-import {MovieTitleFilterCriteria} from './movieTitleFilterCriteria';
+import {MovieTitleFilterCriteria} from './movie-title-filter-criteria';
 
 const API_URL = environment.apiUrl;
 

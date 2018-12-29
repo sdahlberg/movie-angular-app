@@ -9,10 +9,8 @@
     <div id="search-criteria">
       <form [formGroup]="movieTitleForm">
         <mat-form-field>
-          <mat-select placeholder="Movie title type"
-                      [(value)]="selectedMovieTitleTypes"
-                      (openedChange)="openedChange($event)"
-                      formControlName="movieTitleTypeControl" multiple>
+          <mat-select placeholder="Movie title type" [(value)]="selectedMovieTitleTypes"
+                      (openedChange)="openedChange($event)" formControlName="movieTitleTypeControl" multiple>
             <mat-option *ngFor="let movieTitleType of movieTitleTypes" [value]="movieTitleType">{{movieTitleType}}
             </mat-option>
           </mat-select>
