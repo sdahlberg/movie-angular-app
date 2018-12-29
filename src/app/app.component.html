@@ -6,6 +6,19 @@
     <div *ngIf="pageOfMovieTitles.loading$ | async">
       <mat-spinner></mat-spinner>
     </div>
+    <div id="search-criteria">
+      <form [formGroup]="movieTitleForm">
+        <mat-form-field>
+          <mat-select placeholder="Movie title type"
+                      [(value)]="selectedMovieTitleTypes"
+                      (openedChange)="openedChange($event)"
+                      formControlName="movieTitleTypeControl" multiple>
+            <mat-option *ngFor="let movieTitleType of movieTitleTypes" [value]="movieTitleType">{{movieTitleType}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </div>
     <div class="mat-elevation-z8">
       <table mat-table matSort [dataSource]="pageOfMovieTitles.content" (matSortChange)="sort($event)">
 

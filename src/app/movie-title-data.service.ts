@@ -5,7 +5,7 @@ import {MovieTitle} from './movie-title';
 import {Observable} from 'rxjs';
 import {Page} from './page';
 import {Pageable} from './pageable';
-import {Order} from './order';
+import {MovieTitleFilterCriteria} from './movieTitleFilterCriteria';
 
 const API_URL = environment.apiUrl;
 
@@ -15,7 +15,7 @@ export class MovieTitleDataService {
   constructor(private http: HttpClient) {
   }
 
-  public getMovieTitles(pageable?: Pageable): Observable<Page<MovieTitle>> {
+  public getMovieTitles(filterCriteria?: MovieTitleFilterCriteria, pageable?: Pageable): Observable<Page<MovieTitle>> {
     let httpParams = new HttpParams();
     if (pageable !== undefined) {
       if (pageable.pageNumber && pageable.pageSize) {
@@ -24,11 +24,20 @@ export class MovieTitleDataService {
           .set('size', String(pageable.pageSize));
       }
       if (pageable.sort && pageable.sort.orders) {
-        for (const order: Order of pageable.sort.orders) {
+        for (const order of pageable.sort.orders) {
           httpParams = httpParams.append('sort', order.property + ',' + order.direction);
         }
       }
     }
-    return this.http.get<Page<MovieTitle>>(`${API_URL}/movies`, {params: httpParams});
+    if (filterCriteria !== undefined) {
+      if (filterCriteria.movieTitleTypes) {
+        httpParams = httpParams.set('movieTitleTypes', filterCriteria.movieTitleTypes.join(','));
+      }
+    }
+    return this.http.get<Page<MovieTitle>>(`${API_URL}/movieTitles/search`, {params: httpParams});
+  }
+
+  public getMovieTitleTypes(): Observable<string[]> {
+    return this.http.get<string[]>(`${API_URL}/movieTitleTypes`);
   }
 }
