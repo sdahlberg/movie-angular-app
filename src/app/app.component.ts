@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MovieTitleDataService} from './movie-title-data.service';
 import {MovieTitle} from './movie-title';
 import {Page} from './page';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Pageable} from './pageable';
 import {Sort} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
@@ -19,18 +19,23 @@ export class AppComponent implements OnInit {
   pageOfMovieTitles: Page<MovieTitle> = <Page<MovieTitle>>{};
   displayedColumns: string[] = ['tconst', 'movieTitleType', 'primaryTitle', 'isAdult', 'startYear', 'endYear', 'runtimeMinutes', 'genres'];
   movieTitleTypes: string[];
+  movieTitleGenres: string[];
   movieTitleForm: FormGroup;
   selectedMovieTitleTypes: string[];
+  selectedMovieTitleGenres: string[];
+  isLoading = true;
 
   constructor(private movieTitleDataService: MovieTitleDataService, private router: Router, private route: ActivatedRoute,
               private formBuilder: FormBuilder) {
     this.movieTitleForm = this.formBuilder.group({
-      movieTitleTypeControl: new FormControl()
+      movieTitleTypeControl: new FormControl(),
+      movieTitleGenreControl: new FormControl()
     });
   }
 
   ngOnInit() {
     this.movieTitleDataService.getMovieTitleTypes().subscribe(movieTitleTypes => this.movieTitleTypes = movieTitleTypes);
+    this.movieTitleDataService.getMovieTitleGenres().subscribe(movieTitleGenres => this.movieTitleGenres = movieTitleGenres);
     this.route.queryParams
       .subscribe(queryParams => {
         // guard https://stackoverflow.com/questions/39861547/angular2-query-params-subscription-fires-twice
@@ -54,14 +59,21 @@ export class AppComponent implements OnInit {
         if (queryParams.movieTitleTypes) {
           filterCriteria.movieTitleTypes = queryParams.movieTitleTypes.split(',');
         }
+        if (queryParams.movieTitleGenres) {
+          filterCriteria.movieTitleGenres = queryParams.movieTitleGenres.split(',');
+        }
         this.movieTitleDataService.getMovieTitles(filterCriteria, pageable)
-          .subscribe(movieTitles => this.pageOfMovieTitles = movieTitles);
+          .subscribe(movieTitles => {
+            this.pageOfMovieTitles = movieTitles;
+            this.isLoading = false;
+          }, error => this.isLoading = false);
         this.setFormControlValues(filterCriteria);
       });
   }
 
   private setFormControlValues(filterCriteria: MovieTitleFilterCriteria) {
     this.movieTitleForm.get('movieTitleTypeControl').setValue(filterCriteria.movieTitleTypes);
+    this.movieTitleForm.get('movieTitleGenreControl').setValue(filterCriteria.movieTitleGenres);
   }
 
   paginate($event) {
@@ -78,9 +90,24 @@ export class AppComponent implements OnInit {
     if (opened) {
       return;
     }
+    this.isLoading = true;
+    let params: Params;
     if (this.selectedMovieTitleTypes && this.selectedMovieTitleTypes.length > 0) {
+      params = {
+        ...params,
+        'movieTitleTypes': this.selectedMovieTitleTypes.join(',')
+      };
+    }
+    if (this.selectedMovieTitleGenres && this.selectedMovieTitleGenres.length > 0) {
+      params = {
+        ...params,
+        'movieTitleGenres': this.selectedMovieTitleGenres.join(',')
+      };
+    }
+
+    if (params) {
       this.router.navigate([], {
-        queryParams: {'movieTitleTypes': this.selectedMovieTitleTypes.join(',')},
+        queryParams: params,
         queryParamsHandling: 'merge'
       });
     } else {

@@ -15,29 +15,43 @@ export class MovieTitleDataService {
   constructor(private http: HttpClient) {
   }
 
-  public getMovieTitles(filterCriteria?: MovieTitleFilterCriteria, pageable?: Pageable): Observable<Page<MovieTitle>> {
-    let httpParams = new HttpParams();
-    if (pageable !== undefined) {
-      if (pageable.pageNumber && pageable.pageSize) {
-        httpParams = httpParams
-          .set('page', String(pageable.pageNumber))
-          .set('size', String(pageable.pageSize));
-      }
-      if (pageable.sort && pageable.sort.orders) {
-        for (const order of pageable.sort.orders) {
-          httpParams = httpParams.append('sort', order.property + ',' + order.direction);
-        }
+  private static applyPageableToHttpParams(httpParams: HttpParams, pageable?: Pageable) {
+    if (!pageable) {
+      return;
+    }
+    if (pageable.pageNumber && pageable.pageSize) {
+      httpParams = httpParams
+        .set('page', String(pageable.pageNumber))
+        .set('size', String(pageable.pageSize));
+    }
+    if (pageable.sort && pageable.sort.orders) {
+      for (const order of pageable.sort.orders) {
+        httpParams = httpParams.append('sort', order.property + ',' + order.direction);
       }
     }
+  }
+
+  public getMovieTitles(filterCriteria?: MovieTitleFilterCriteria, pageable?: Pageable): Observable<Page<MovieTitle>> {
+    let httpParams = new HttpParams();
+    MovieTitleDataService.applyPageableToHttpParams(httpParams, pageable);
     if (filterCriteria !== undefined) {
       if (filterCriteria.movieTitleTypes) {
         httpParams = httpParams.set('movieTitleTypes', filterCriteria.movieTitleTypes.join(','));
       }
+      if (filterCriteria.movieTitleGenres) {
+        httpParams = httpParams.set('movieTitleGenres', filterCriteria.movieTitleGenres.join(','));
+      }
     }
-    return this.http.get<Page<MovieTitle>>(`${API_URL}/movieTitles/search`, {params: httpParams});
+    return this.http.get<Page<MovieTitle>>(`${API_URL}/movie-title/search`, {params: httpParams});
   }
 
   public getMovieTitleTypes(): Observable<string[]> {
-    return this.http.get<string[]>(`${API_URL}/movieTitleTypes`);
+    return this.http.get<string[]>(`${API_URL}/movie-title-type`);
   }
+
+  public getMovieTitleGenres(): Observable<string[]> {
+    return this.http.get<string[]>(`${API_URL}/movie-title-genre`);
+  }
+
+
 }
