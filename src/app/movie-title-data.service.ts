@@ -29,11 +29,12 @@ export class MovieTitleDataService {
         httpParams = httpParams.append('sort', order.property + ',' + order.direction);
       }
     }
+    return httpParams;
   }
 
   public getMovieTitles(filterCriteria?: MovieTitleFilterCriteria, pageable?: Pageable): Observable<Page<MovieTitle>> {
     let httpParams = new HttpParams();
-    MovieTitleDataService.applyPageableToHttpParams(httpParams, pageable);
+    httpParams = MovieTitleDataService.applyPageableToHttpParams(httpParams, pageable);
     if (filterCriteria !== undefined) {
       if (filterCriteria.movieTitleTypes) {
         httpParams = httpParams.set('movieTitleTypes', filterCriteria.movieTitleTypes.join(','));
@@ -52,6 +53,4 @@ export class MovieTitleDataService {
   public getMovieTitleGenres(): Observable<string[]> {
     return this.http.get<string[]>(`${API_URL}/movie-title-genre`);
   }
-
-
 }
