@@ -26,7 +26,7 @@
     </mat-card>
     <mat-card>
       <div class="mat-elevation-z8">
-        <table mat-table matSort [dataSource]="pageOfMovieTitles.content" (matSortChange)="sort($event)">
+        <table mat-table matSort [dataSource]="pageOfMovieTitles.content" (matSortChange)="doSort($event)">
 
           <ng-container matColumnDef="tconst">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="tconst">tconst</th>
