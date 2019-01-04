@@ -2,6 +2,17 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
 
+## Choices
+
+- plain Angular (for now)
+- Angular material
+
+## Possible TODO's
+
+- actions that are reflected in query string are tightly coupled with angular's router component; find out how to decouple that
+- filter, datatable and pagination in seperate components
+- more filters on movie-title table
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
