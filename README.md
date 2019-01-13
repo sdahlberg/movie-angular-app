@@ -6,12 +6,14 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 - plain Angular (for now)
 - Angular material
+- docker through docker toolbox
 
 ## Possible TODO's
 
 - actions that are reflected in query string are tightly coupled with angular's router component; find out how to decouple that
 - filter, datatable and pagination in seperate components
 - more filters on movie-title table
+- move docker-machine IP to docker-compose level
 
 ## Development server
 
@@ -24,6 +26,13 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+### Build and run
+```
+ng build --prod
+docker build -t movie-angular-app .
+docker run -p 4200:80 movie-angular-app
+```
 
 ## Running unit tests
 
