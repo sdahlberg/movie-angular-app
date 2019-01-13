@@ -34,7 +34,7 @@
           </ng-container>
 
           <ng-container matColumnDef="movieTitleType">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="movieTitleType">title type</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="movieTitleType" matSortDisableClear>title type</th>
             <td mat-cell *matCellDef="let movieTitle">{{movieTitle.movieTitleType}}</td>
           </ng-container>
 
@@ -75,7 +75,7 @@
           <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
         </mat-card>
         <mat-paginator length="{{pageOfMovieTitles.totalElements}}" pageSize="{{pageOfMovieTitles.size}}"
-                       [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent = paginate($event)">
+                       [pageSizeOptions]="[5, 10, 20]" (page)="paginate($event)">
         </mat-paginator>
       </div>
     </mat-card>
