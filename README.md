@@ -29,9 +29,8 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### Build and run
 ```
-ng build --prod
-docker build -t movie-angular-app .
-docker run -p 4200:80 movie-angular-app
+ng build
+docker-compose up --build -d
 ```
 
 ## Running unit tests
