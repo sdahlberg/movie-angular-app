@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+  app:
+    build: .
+    ports:
+    - "4200:80"
+    environment:
+    - GATEWAY_IP=192.168.99.101
+    - GATEWAY_PORT=4200
+

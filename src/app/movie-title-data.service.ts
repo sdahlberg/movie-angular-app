@@ -7,12 +7,12 @@ import {Page} from './page';
 import {Pageable} from './pageable';
 import {MovieTitleFilterCriteria} from './movie-title-filter-criteria';
 
-const API_URL = environment.apiUrl;
-
 @Injectable()
 export class MovieTitleDataService {
+  private apiUrl: string;
 
   constructor(private http: HttpClient) {
+    this.apiUrl = environment.settings.gateway;
   }
 
   private static applyPageableToHttpParams(httpParams: HttpParams, pageable?: Pageable) {
@@ -43,14 +43,14 @@ export class MovieTitleDataService {
         httpParams = httpParams.set('movieTitleGenres', filterCriteria.movieTitleGenres.join(','));
       }
     }
-    return this.http.get<Page<MovieTitle>>(`${API_URL}/movie-title/search`, {params: httpParams});
+    return this.http.get<Page<MovieTitle>>(`${this.apiUrl}/movie-title/search`, {params: httpParams});
   }
 
   public getMovieTitleTypes(): Observable<string[]> {
-    return this.http.get<string[]>(`${API_URL}/movie-title-type`);
+    return this.http.get<string[]>(`${this.apiUrl}/movie-title-type`);
   }
 
   public getMovieTitleGenres(): Observable<string[]> {
-    return this.http.get<string[]>(`${API_URL}/movie-title-genre`);
+    return this.http.get<string[]>(`${this.apiUrl}/movie-title-genre`);
   }
 }

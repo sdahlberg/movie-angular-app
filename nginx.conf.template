@@ -20,7 +20,7 @@ http {
 
         location /api {
             proxy_redirect off;
-            proxy_pass http://192.168.99.101;
+            proxy_pass http://$GATEWAY_IP;
             proxy_set_header 'Access-Control-Allow-Origin' '*';
         }
 

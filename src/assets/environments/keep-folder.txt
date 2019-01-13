@@ -1,0 +1,1 @@
+existence of this file makes sure the folder is copied when building docker image. Dockerfile tries to copy environment into this folder.

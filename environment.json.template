@@ -1,0 +1,7 @@
+{
+  "name": "prod",
+  "production": false,
+  "settings": {
+    "gateway": "http://$GATEWAY_IP:$GATEWAY_PORT/api"
+  }
+}
