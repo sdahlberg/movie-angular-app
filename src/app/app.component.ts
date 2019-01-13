@@ -4,7 +4,7 @@ import {MovieTitle} from './movie-title';
 import {Page} from './page';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import {Pageable} from './pageable';
-import {MatSort, MatSortable, Sort} from '@angular/material';
+import {MatPaginator, MatSort, MatSortable, Sort} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MovieTitleFilterCriteria} from './movie-title-filter-criteria';
 import {filter} from 'rxjs/operators';
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   selectedMovieTitleGenres: string[];
   isLoading = true;
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private movieTitleDataService: MovieTitleDataService, private router: Router, private route: ActivatedRoute,
@@ -50,7 +51,6 @@ export class AppComponent implements OnInit {
         if (!this.initialized && params.keys.length === 0 && window.location.href.split('?')[1]) {
           return;
         }
-        this.initialized = true;
 
         const pageable: Pageable = {
           ...this.pageOfMovieTitles.pageable,
@@ -59,13 +59,10 @@ export class AppComponent implements OnInit {
         pageable.pageSize = +params.get('pageSize') || pageable.pageSize;
         pageable.pageNumber = +params.get('pageIndex') || pageable.pageNumber;
 
-        const properties = params.getAll('active');
-        const directions = params.getAll('direction');
-
-        properties.forEach((property, index) => {
+        params.getAll('active').forEach((property, index) => {
           pageable.sort.orders.push({
             property: property,
-            direction: directions[index]
+            direction: params.getAll('direction')[index]
           });
         });
 
@@ -78,19 +75,31 @@ export class AppComponent implements OnInit {
             this.pageOfMovieTitles = movieTitles;
             this.isLoading = false;
           }, error => this.isLoading = false);
+
         this.setUiValues(filterCriteria, pageable);
+
+        this.initialized = true;
       });
   }
 
   private setUiValues(filterCriteria: MovieTitleFilterCriteria, pageable: Pageable) {
+    if (this.initialized) {
+      return;
+    }
     this.movieTitleForm.get('movieTitleTypeControl').setValue(filterCriteria.movieTitleTypes);
     this.movieTitleForm.get('movieTitleGenreControl').setValue(filterCriteria.movieTitleGenres);
-    // if (pageable.sort.orders.length > 0) {
-    //   this.sort.sort(<MatSortable> {
-    //     id: pageable.sort.orders[0].property,
-    //     start: pageable.sort.orders[0].direction
-    //   });
-    // }
+
+    if (pageable.pageNumber) {
+      this.paginator.pageIndex = pageable.pageNumber;
+      this.paginator.pageSize = pageable.pageSize;
+    }
+
+    if (pageable.sort.orders.length > 0) {
+      this.sort.sort(<MatSortable> {
+        id: pageable.sort.orders[0].property,
+        start: pageable.sort.orders[0].direction
+      });
+    }
   }
 
   paginate($event) {
@@ -99,6 +108,9 @@ export class AppComponent implements OnInit {
   }
 
   doSort(sort: Sort) {
+    if (!this.initialized) {
+      return;
+    }
     const properties: string[] = Object.assign([], this.route.snapshot.queryParamMap.getAll('active'));
     const directions: string[] = Object.assign([], this.route.snapshot.queryParamMap.getAll('direction'));
     const activeIndex = properties.findIndex(value => value === sort.active);
