@@ -5,6 +5,6 @@ services:
     ports:
     - "4200:80"
     environment:
-    - GATEWAY_IP=192.168.99.101
+    - GATEWAY_IP=192.168.99.100
     - GATEWAY_PORT=4200
 
